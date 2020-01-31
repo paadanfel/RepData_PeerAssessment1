@@ -141,8 +141,29 @@ Calculate and report the mean and median total number of steps taken per day.
 summary(total_steps_by_day_new$total_steps)
 ```
 
-The mean and median of the total number of steps taken per day are `10766` and `10766` respectively.
+The mean and median of the total number of steps taken per day are `10766` and `10766` respectively.  
+What is the impact of imputing missing data on the estimates of the total daily number of steps?  
+We can infer that the overall average number of steps increased.
 
 
 
 ## Are there differences in activity patterns between weekdays and weekends?
+
+```{r}
+
+# Create a new factor variable in the dataset with two levels – “weekday” and “weekend” indicating whether a given date is a weekday or weekend day.
+
+activity_NAs_replaced$weekday_weekend <- factor(if_else(weekdays(activity_NAs_replaced$date) %in% c('Sunday', 'Saturday'), "weekend", "weekday"))
+
+
+
+# Make a panel plot containing a time series plot (i.e. type="l") of the 5-minute interval (x-axis) and the average number of steps taken, 
+# averaged across all weekday days or weekend days (y-axis). 
+
+average_steps_by_interval_new <- summarise(group_by(activity_NAs_replaced, interval, weekday_weekend), average_steps = mean(steps))
+
+ggplot(average_steps_by_interval_new, aes(x=interval, y=average_steps)) + geom_line() + facet_wrap(~weekday_weekend, ncol = 1)
+
+```
+
+

@@ -238,10 +238,25 @@ plot_grid(new, old)</code></pre>
 <pre class="r"><code>summary(total_steps_by_day_new$total_steps)</code></pre>
 <pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
 ##      41    9819   10766   10766   12811   21194</code></pre>
-<p>The mean and median of the total number of steps taken per day are <code>10766</code> and <code>10766</code> respectively.</p>
+<p>The mean and median of the total number of steps taken per day are <code>10766</code> and <code>10766</code> respectively.<br />
+What is the impact of imputing missing data on the estimates of the total daily number of steps?<br />
+We can infer that the overall average number of steps increased.</p>
 </div>
 <div id="are-there-differences-in-activity-patterns-between-weekdays-and-weekends" class="section level2">
 <h2>Are there differences in activity patterns between weekdays and weekends?</h2>
+<pre class="r"><code># Create a new factor variable in the dataset with two levels – “weekday” and “weekend” indicating whether a given date is a weekday or weekend day.
+
+activity_NAs_replaced$weekday_weekend &lt;- factor(if_else(weekdays(activity_NAs_replaced$date) %in% c(&#39;Sunday&#39;, &#39;Saturday&#39;), &quot;weekend&quot;, &quot;weekday&quot;))
+
+
+
+# Make a panel plot containing a time series plot (i.e. type=&quot;l&quot;) of the 5-minute interval (x-axis) and the average number of steps taken, 
+# averaged across all weekday days or weekend days (y-axis). 
+
+average_steps_by_interval_new &lt;- summarise(group_by(activity_NAs_replaced, interval, weekday_weekend), average_steps = mean(steps))
+
+ggplot(average_steps_by_interval_new, aes(x=interval, y=average_steps)) + geom_line() + facet_wrap(~weekday_weekend, ncol = 1)</code></pre>
+<p><img src="PA1_template_files/figure-html/unnamed-chunk-8-1.png" /><!-- --></p>
 </div>
 
 
